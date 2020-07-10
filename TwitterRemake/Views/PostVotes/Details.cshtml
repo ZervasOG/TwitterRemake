@@ -1,0 +1,42 @@
+﻿@model TwitterRemake.Models.t_PostVotes
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>t_PostVotes</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.IsUpvote)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsUpvote)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.t_Posts.Text)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.t_Posts.Text)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.t_Users.Username)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.t_Users.Username)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.VoteID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
