@@ -1,0 +1,434 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="TwitterRemakeModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="t_Comments">
+          <Key>
+            <PropertyRef Name="CommentID" />
+          </Key>
+          <Property Name="CommentID" Type="int" Nullable="false" />
+          <Property Name="UserID" Type="int" Nullable="false" />
+          <Property Name="Text" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="PostID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_CommentVotes">
+          <Key>
+            <PropertyRef Name="VoteID" />
+          </Key>
+          <Property Name="VoteID" Type="int" Nullable="false" />
+          <Property Name="CommentID" Type="int" Nullable="false" />
+          <Property Name="UserID" Type="int" Nullable="false" />
+          <Property Name="IsUpvote" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_Posts">
+          <Key>
+            <PropertyRef Name="PostID" />
+          </Key>
+          <Property Name="PostID" Type="int" Nullable="false" />
+          <Property Name="UserID" Type="int" />
+          <Property Name="Date" Type="datetime" />
+          <Property Name="Text" Type="nvarchar" MaxLength="200" />
+        </EntityType>
+        <EntityType Name="t_PostVotes">
+          <Key>
+            <PropertyRef Name="VoteID" />
+          </Key>
+          <Property Name="VoteID" Type="int" Nullable="false" />
+          <Property Name="UserID" Type="int" Nullable="false" />
+          <Property Name="PostID" Type="int" Nullable="false" />
+          <Property Name="IsUpvote" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_Users">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="int" Nullable="false" />
+          <Property Name="Username" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_t_Comments_t_Posts">
+          <End Role="t_Posts" Type="Self.t_Posts" Multiplicity="1" />
+          <End Role="t_Comments" Type="Self.t_Comments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="t_Posts">
+              <PropertyRef Name="PostID" />
+            </Principal>
+            <Dependent Role="t_Comments">
+              <PropertyRef Name="PostID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_t_Comments_t_Users">
+          <End Role="t_Users" Type="Self.t_Users" Multiplicity="1" />
+          <End Role="t_Comments" Type="Self.t_Comments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="t_Users">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="t_Comments">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_t_CommentVotes_t_Comments">
+          <End Role="t_Comments" Type="Self.t_Comments" Multiplicity="1" />
+          <End Role="t_CommentVotes" Type="Self.t_CommentVotes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="t_Comments">
+              <PropertyRef Name="CommentID" />
+            </Principal>
+            <Dependent Role="t_CommentVotes">
+              <PropertyRef Name="CommentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_t_CommentVotes_t_Users">
+          <End Role="t_Users" Type="Self.t_Users" Multiplicity="1" />
+          <End Role="t_CommentVotes" Type="Self.t_CommentVotes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="t_Users">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="t_CommentVotes">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_t_Posts_t_Users">
+          <End Role="t_Users" Type="Self.t_Users" Multiplicity="0..1" />
+          <End Role="t_Posts" Type="Self.t_Posts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="t_Users">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="t_Posts">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_t_PostVotes_t_Posts">
+          <End Role="t_Posts" Type="Self.t_Posts" Multiplicity="1" />
+          <End Role="t_PostVotes" Type="Self.t_PostVotes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="t_Posts">
+              <PropertyRef Name="PostID" />
+            </Principal>
+            <Dependent Role="t_PostVotes">
+              <PropertyRef Name="PostID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_t_PostVotes_t_Users">
+          <End Role="t_Users" Type="Self.t_Users" Multiplicity="1" />
+          <End Role="t_PostVotes" Type="Self.t_PostVotes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="t_Users">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="t_PostVotes">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="TwitterRemakeModelStoreContainer">
+          <EntitySet Name="t_Comments" EntityType="Self.t_Comments" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_CommentVotes" EntityType="Self.t_CommentVotes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_Posts" EntityType="Self.t_Posts" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_PostVotes" EntityType="Self.t_PostVotes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_Users" EntityType="Self.t_Users" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_t_Comments_t_Posts" Association="Self.FK_t_Comments_t_Posts">
+            <End Role="t_Posts" EntitySet="t_Posts" />
+            <End Role="t_Comments" EntitySet="t_Comments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_t_Comments_t_Users" Association="Self.FK_t_Comments_t_Users">
+            <End Role="t_Users" EntitySet="t_Users" />
+            <End Role="t_Comments" EntitySet="t_Comments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_t_CommentVotes_t_Comments" Association="Self.FK_t_CommentVotes_t_Comments">
+            <End Role="t_Comments" EntitySet="t_Comments" />
+            <End Role="t_CommentVotes" EntitySet="t_CommentVotes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_t_CommentVotes_t_Users" Association="Self.FK_t_CommentVotes_t_Users">
+            <End Role="t_Users" EntitySet="t_Users" />
+            <End Role="t_CommentVotes" EntitySet="t_CommentVotes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_t_Posts_t_Users" Association="Self.FK_t_Posts_t_Users">
+            <End Role="t_Users" EntitySet="t_Users" />
+            <End Role="t_Posts" EntitySet="t_Posts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_t_PostVotes_t_Posts" Association="Self.FK_t_PostVotes_t_Posts">
+            <End Role="t_Posts" EntitySet="t_Posts" />
+            <End Role="t_PostVotes" EntitySet="t_PostVotes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_t_PostVotes_t_Users" Association="Self.FK_t_PostVotes_t_Users">
+            <End Role="t_Users" EntitySet="t_Users" />
+            <End Role="t_PostVotes" EntitySet="t_PostVotes" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="TwitterRemakeModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="t_Comments">
+          <Key>
+            <PropertyRef Name="CommentID" />
+          </Key>
+          <Property Name="CommentID" Type="Int32" Nullable="false" />
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <Property Name="Text" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PostID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="t_Posts" Relationship="Self.FK_t_Comments_t_Posts" FromRole="t_Comments" ToRole="t_Posts" />
+          <NavigationProperty Name="t_Users" Relationship="Self.FK_t_Comments_t_Users" FromRole="t_Comments" ToRole="t_Users" />
+          <NavigationProperty Name="t_CommentVotes" Relationship="Self.FK_t_CommentVotes_t_Comments" FromRole="t_Comments" ToRole="t_CommentVotes" />
+        </EntityType>
+        <EntityType Name="t_CommentVotes">
+          <Key>
+            <PropertyRef Name="VoteID" />
+          </Key>
+          <Property Name="VoteID" Type="Int32" Nullable="false" />
+          <Property Name="CommentID" Type="Int32" Nullable="false" />
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <Property Name="IsUpvote" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="t_Comments" Relationship="Self.FK_t_CommentVotes_t_Comments" FromRole="t_CommentVotes" ToRole="t_Comments" />
+          <NavigationProperty Name="t_Users" Relationship="Self.FK_t_CommentVotes_t_Users" FromRole="t_CommentVotes" ToRole="t_Users" />
+        </EntityType>
+        <EntityType Name="t_Posts">
+          <Key>
+            <PropertyRef Name="PostID" />
+          </Key>
+          <Property Name="PostID" Type="Int32" Nullable="false" />
+          <Property Name="UserID" Type="Int32" />
+          <Property Name="Date" Type="DateTime" Precision="3" />
+          <Property Name="Text" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="t_Comments" Relationship="Self.FK_t_Comments_t_Posts" FromRole="t_Posts" ToRole="t_Comments" />
+          <NavigationProperty Name="t_Users" Relationship="Self.FK_t_Posts_t_Users" FromRole="t_Posts" ToRole="t_Users" />
+          <NavigationProperty Name="t_PostVotes" Relationship="Self.FK_t_PostVotes_t_Posts" FromRole="t_Posts" ToRole="t_PostVotes" />
+        </EntityType>
+        <EntityType Name="t_PostVotes">
+          <Key>
+            <PropertyRef Name="VoteID" />
+          </Key>
+          <Property Name="VoteID" Type="Int32" Nullable="false" />
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <Property Name="PostID" Type="Int32" Nullable="false" />
+          <Property Name="IsUpvote" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="t_Posts" Relationship="Self.FK_t_PostVotes_t_Posts" FromRole="t_PostVotes" ToRole="t_Posts" />
+          <NavigationProperty Name="t_Users" Relationship="Self.FK_t_PostVotes_t_Users" FromRole="t_PostVotes" ToRole="t_Users" />
+        </EntityType>
+        <EntityType Name="t_Users">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="t_Comments" Relationship="Self.FK_t_Comments_t_Users" FromRole="t_Users" ToRole="t_Comments" />
+          <NavigationProperty Name="t_CommentVotes" Relationship="Self.FK_t_CommentVotes_t_Users" FromRole="t_Users" ToRole="t_CommentVotes" />
+          <NavigationProperty Name="t_Posts" Relationship="Self.FK_t_Posts_t_Users" FromRole="t_Users" ToRole="t_Posts" />
+          <NavigationProperty Name="t_PostVotes" Relationship="Self.FK_t_PostVotes_t_Users" FromRole="t_Users" ToRole="t_PostVotes" />
+        </EntityType>
+        <Association Name="FK_t_Comments_t_Posts">
+          <End Role="t_Posts" Type="Self.t_Posts" Multiplicity="1" />
+          <End Role="t_Comments" Type="Self.t_Comments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="t_Posts">
+              <PropertyRef Name="PostID" />
+            </Principal>
+            <Dependent Role="t_Comments">
+              <PropertyRef Name="PostID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_t_Comments_t_Users">
+          <End Role="t_Users" Type="Self.t_Users" Multiplicity="1" />
+          <End Role="t_Comments" Type="Self.t_Comments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="t_Users">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="t_Comments">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_t_CommentVotes_t_Comments">
+          <End Role="t_Comments" Type="Self.t_Comments" Multiplicity="1" />
+          <End Role="t_CommentVotes" Type="Self.t_CommentVotes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="t_Comments">
+              <PropertyRef Name="CommentID" />
+            </Principal>
+            <Dependent Role="t_CommentVotes">
+              <PropertyRef Name="CommentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_t_CommentVotes_t_Users">
+          <End Role="t_Users" Type="Self.t_Users" Multiplicity="1" />
+          <End Role="t_CommentVotes" Type="Self.t_CommentVotes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="t_Users">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="t_CommentVotes">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_t_Posts_t_Users">
+          <End Role="t_Users" Type="Self.t_Users" Multiplicity="0..1" />
+          <End Role="t_Posts" Type="Self.t_Posts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="t_Users">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="t_Posts">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_t_PostVotes_t_Posts">
+          <End Role="t_Posts" Type="Self.t_Posts" Multiplicity="1" />
+          <End Role="t_PostVotes" Type="Self.t_PostVotes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="t_Posts">
+              <PropertyRef Name="PostID" />
+            </Principal>
+            <Dependent Role="t_PostVotes">
+              <PropertyRef Name="PostID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_t_PostVotes_t_Users">
+          <End Role="t_Users" Type="Self.t_Users" Multiplicity="1" />
+          <End Role="t_PostVotes" Type="Self.t_PostVotes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="t_Users">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="t_PostVotes">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="TwitterRemakeEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="t_Comments" EntityType="Self.t_Comments" />
+          <EntitySet Name="t_CommentVotes" EntityType="Self.t_CommentVotes" />
+          <EntitySet Name="t_Posts" EntityType="Self.t_Posts" />
+          <EntitySet Name="t_PostVotes" EntityType="Self.t_PostVotes" />
+          <EntitySet Name="t_Users" EntityType="Self.t_Users" />
+          <AssociationSet Name="FK_t_Comments_t_Posts" Association="Self.FK_t_Comments_t_Posts">
+            <End Role="t_Posts" EntitySet="t_Posts" />
+            <End Role="t_Comments" EntitySet="t_Comments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_t_Comments_t_Users" Association="Self.FK_t_Comments_t_Users">
+            <End Role="t_Users" EntitySet="t_Users" />
+            <End Role="t_Comments" EntitySet="t_Comments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_t_CommentVotes_t_Comments" Association="Self.FK_t_CommentVotes_t_Comments">
+            <End Role="t_Comments" EntitySet="t_Comments" />
+            <End Role="t_CommentVotes" EntitySet="t_CommentVotes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_t_CommentVotes_t_Users" Association="Self.FK_t_CommentVotes_t_Users">
+            <End Role="t_Users" EntitySet="t_Users" />
+            <End Role="t_CommentVotes" EntitySet="t_CommentVotes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_t_Posts_t_Users" Association="Self.FK_t_Posts_t_Users">
+            <End Role="t_Users" EntitySet="t_Users" />
+            <End Role="t_Posts" EntitySet="t_Posts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_t_PostVotes_t_Posts" Association="Self.FK_t_PostVotes_t_Posts">
+            <End Role="t_Posts" EntitySet="t_Posts" />
+            <End Role="t_PostVotes" EntitySet="t_PostVotes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_t_PostVotes_t_Users" Association="Self.FK_t_PostVotes_t_Users">
+            <End Role="t_Users" EntitySet="t_Users" />
+            <End Role="t_PostVotes" EntitySet="t_PostVotes" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="TwitterRemakeModelStoreContainer" CdmEntityContainer="TwitterRemakeEntities">
+          <EntitySetMapping Name="t_Comments">
+            <EntityTypeMapping TypeName="TwitterRemakeModel.t_Comments">
+              <MappingFragment StoreEntitySet="t_Comments">
+                <ScalarProperty Name="CommentID" ColumnName="CommentID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="PostID" ColumnName="PostID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_CommentVotes">
+            <EntityTypeMapping TypeName="TwitterRemakeModel.t_CommentVotes">
+              <MappingFragment StoreEntitySet="t_CommentVotes">
+                <ScalarProperty Name="VoteID" ColumnName="VoteID" />
+                <ScalarProperty Name="CommentID" ColumnName="CommentID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="IsUpvote" ColumnName="IsUpvote" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_Posts">
+            <EntityTypeMapping TypeName="TwitterRemakeModel.t_Posts">
+              <MappingFragment StoreEntitySet="t_Posts">
+                <ScalarProperty Name="PostID" ColumnName="PostID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_PostVotes">
+            <EntityTypeMapping TypeName="TwitterRemakeModel.t_PostVotes">
+              <MappingFragment StoreEntitySet="t_PostVotes">
+                <ScalarProperty Name="VoteID" ColumnName="VoteID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="PostID" ColumnName="PostID" />
+                <ScalarProperty Name="IsUpvote" ColumnName="IsUpvote" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_Users">
+            <EntityTypeMapping TypeName="TwitterRemakeModel.t_Users">
+              <MappingFragment StoreEntitySet="t_Users">
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Kein" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
